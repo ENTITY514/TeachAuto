@@ -1,0 +1,41 @@
+/* components/Navbar.css */
+.navbar {
+    width: 800px;
+}
+
+.navList {
+    list-style: none;
+    /* Убираем маркеры списка */
+    display: flex;
+    /* Ссылки в ряд */
+    justify-content: space-around;
+    /* Равномерное распределение */
+    padding: 0;
+    margin: 0;
+}
+
+.navLink {
+    display: inline-block;
+    /* Блочный элемент для корректной работы трансформации */
+    padding: 10px 20px;
+    /* Внутренние отступы */
+    background-color: black;
+    /* Черный фон в неактивном состоянии */
+    color: white;
+    /* Белый текст в неактивном состоянии */
+    text-decoration: none;
+    /* Убираем подчеркивание */
+    border-radius: 8px;
+    /* Закругленные края */
+    transition: all 0.3s ease;
+    /* Плавный переход для всех изменений */
+}
+
+.navLink:hover {
+    background-color: white;
+    /* Белый фон при наведении */
+    color: black;
+    /* Черный текст при наведении */
+    transform: scale(1.1);
+    /* Увеличение текста на 10% */
+}

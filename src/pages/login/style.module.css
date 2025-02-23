@@ -1,0 +1,83 @@
+/* pages/LoginRegisterPage.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .formWrapper {
+    width: 300px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .tabs {
+    display: flex;
+  }
+  
+  .tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .tab.active {
+    background-color: #555;
+  }
+  
+  .formContainer {
+    overflow: hidden; /* Скрываем часть формы за пределами контейнера */
+  }
+  
+  .formSlider {
+    display: flex;
+    width: 200%; /* Две формы рядом занимают двойную ширину */
+    transition: transform 0.5s ease; /* Анимация сдвига */
+  }
+  
+  .form {
+    width: 50%; /* Каждая форма занимает половину ширины слайдера */
+    padding: 20px;
+  }
+  
+  .form.login {
+    background-color: white;
+    color: black;
+  }
+  
+  .form.register {
+    background-color: black;
+    color: white;
+  }
+  
+  .form input {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #555;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .form button[type="submit"]:hover {
+    background-color: #777;
+  }
