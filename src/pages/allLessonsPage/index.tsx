@@ -1,53 +1,6 @@
+import { Class, Lesson, StudentState } from "interfaces/main.interface";
 import style from "./style.module.css"
 import { useEffect, useState } from 'react';
-
-interface Student {
-    id: number;
-    firstName: string;
-    lastName: string;
-    baseGrade: number;
-}
-
-interface Class {
-    id: number;
-    grade: number;
-    rank: string;
-    students: Student[];
-}
-
-interface StudentState {
-    id: number;
-    present: boolean;
-    homework: 0 | 1 | 2;
-    works: { [key: string]: number };
-    finalGrade: number | null;
-  }
-  
-  interface WorkType {
-    id: string;
-    name: string;
-    maxScore: number;
-  }
-  
-  interface Lesson {
-    id: number;
-    date: string;
-    classId: number;
-    topic: string;
-    homeworkDescription: string;
-    students: {
-      id: number;
-      present: boolean;
-      homework: 0 | 1 | 2;
-      works: { [key: string]: number };
-      finalGrade: number | null;
-    }[];
-    workTypes: {
-      id: string;
-      name: string;
-      maxScore: number;
-    }[];
-  }
 
 
 export default function AllLessonsPage() {
@@ -64,31 +17,31 @@ export default function AllLessonsPage() {
     const handleAddLesson = (classId: number) => {
         const currentClass = classes.find(c => c.id === classId);
         if (!currentClass) return;
-      
-        const initialStudents = currentClass.students.map(student => ({
-          id: student.id,
-          present: true,
-          homework: 2 as 0 | 1 | 2,
-          works: {},
-          finalGrade: null
+
+        const initialStudents: StudentState[] = currentClass.students.map(student => ({
+            student,
+            present: true,
+            homework: 2 as 0 | 1 | 2,
+            works: {},
+            finalGrade: null
         }));
-      
+
         const newLesson: Lesson = {
-          id: Date.now(),
-          date: new Date().toISOString(),
-          classId,
-          topic: 'Новая тема',
-          homeworkDescription: '',
-          students: initialStudents,
-          workTypes: []
+            id: Date.now(),
+            date: new Date().toISOString(),
+            classId,
+            topic: 'Новая тема',
+            homeworkDescription: '',
+            students: initialStudents,
+            workTypes: []
         };
-        
+
         const updatedLessons = [...lessons, newLesson];
         localStorage.setItem('lessons', JSON.stringify(updatedLessons));
         setLessons(updatedLessons);
         window.location.href = `/lesson/${newLesson.id}`;
-      };
-      
+    };
+
 
     const lessonsByClass: { [key: number]: Lesson[] } = {};
     lessons.forEach(lesson => {

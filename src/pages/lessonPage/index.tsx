@@ -1,38 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './style.module.css';
-
-interface StudentState {
-  id: number;
-  present: boolean;
-  homework: 0 | 1 | 2;
-  works: { [key: string]: number };
-  finalGrade: number | null;
-}
-
-interface WorkType {
-  id: string;
-  name: string;
-  maxScore: number;
-}
-
-interface StudentState {
-    studentId: number; // Изменяем id на studentId для ясности
-    present: boolean;
-    homework: 0 | 1 | 2;
-    works: { [key: string]: number };
-    finalGrade: number | null;
-  }
-  
-  interface Lesson {
-    id: number;
-    date: string;
-    classId: number;
-    topic: string;
-    homeworkDescription: string;
-    students: StudentState[];
-    workTypes: WorkType[];
-  }
+import { Lesson, WorkType, StudentState } from 'interfaces/main.interface';
 
 const LessonPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,7 +12,7 @@ const LessonPage = () => {
   useEffect(() => {
     const savedLessons = JSON.parse(localStorage.getItem('lessons') || '[]');
     const currentLesson = savedLessons.find((l: Lesson) => l.id === Number(id));
-    
+
     if (currentLesson) {
       setLesson(currentLesson);
     } else {
@@ -53,7 +22,7 @@ const LessonPage = () => {
 
   const updateLesson = (updatedLesson: Lesson) => {
     const savedLessons = JSON.parse(localStorage.getItem('lessons') || '[]');
-    const updatedLessons = savedLessons.map((l: Lesson) => 
+    const updatedLessons = savedLessons.map((l: Lesson) =>
       l.id === updatedLesson.id ? updatedLesson : l
     );
     localStorage.setItem('lessons', JSON.stringify(updatedLessons));
@@ -69,7 +38,7 @@ const LessonPage = () => {
 
   const handleAddWorkType = () => {
     if (!lesson || !newWorkType.type || newWorkType.max < 1) return;
-    
+
     const newWork: WorkType = {
       id: Date.now().toString(),
       name: newWorkType.type,
@@ -161,16 +130,16 @@ const LessonPage = () => {
         </thead>
         <tbody>
           {lesson.students.map((student, index) => (
-            <tr key={student.id}>
+            <tr key={student.student.id}>
               <td>{index + 1}</td>
-              <td>{`${student.id}`}</td>
+              <td>{`${student.student.firstName + " " + student.student.lastName}`}</td>
               <td
                 className={`${styles.presence} ${student.present ? styles.present : styles.absent}`}
                 onClick={() => {
                   const updated = {
                     ...lesson,
                     students: lesson.students.map(s =>
-                      s.id === student.id ? { ...s, present: !s.present } : s
+                      s.student.id === student.student.id ? { ...s, present: !s.present } : s
                     )
                   };
                   updateLesson(updated);
@@ -185,7 +154,7 @@ const LessonPage = () => {
                   const updated = {
                     ...lesson,
                     students: lesson.students.map(s =>
-                      s.id === student.id ? { ...s, homework: newHomework } : s
+                      s.student.id === student.student.id ? { ...s, homework: newHomework } : s
                     )
                   };
                   updateLesson(updated);
@@ -206,7 +175,7 @@ const LessonPage = () => {
                       const updated = {
                         ...lesson,
                         students: lesson.students.map(s =>
-                          s.id === student.id ? { ...s, works: updatedWorks } : s
+                          s.student.id === student.student.id ? { ...s, works: updatedWorks } : s
                         )
                       };
                       updateLesson(updated);
@@ -225,9 +194,9 @@ const LessonPage = () => {
                     const updated = {
                       ...lesson,
                       students: lesson.students.map(s =>
-                        s.id === student.id ? { 
-                          ...s, 
-                          finalGrade: Math.min(10, Math.max(1, +e.target.value)) 
+                        s.student.id === student.student.id ? {
+                          ...s,
+                          finalGrade: Math.min(10, Math.max(1, +e.target.value))
                         } : s
                       )
                     };
@@ -240,7 +209,7 @@ const LessonPage = () => {
         </tbody>
       </table>
 
-      <button 
+      <button
         className={styles.saveButton}
         onClick={() => updateLesson(lesson)}
       >
