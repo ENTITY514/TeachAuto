@@ -30,6 +30,7 @@ const UploadStudentsPage: React.FC = () => {
 
     const addClass = (c: Class) => {
         setClasses([...classes, c]);
+        setSelectedClassId(c.id)
     };
 
     // Добавление нового ученика в выбранный класс
@@ -41,7 +42,6 @@ const UploadStudentsPage: React.FC = () => {
             ...selectedClass,
             students: [...selectedClass.students, student],
         };
-
         setClasses(classes.map((c) => (c.id === selectedClassId ? updatedClass : c)));
     };
 
@@ -54,8 +54,8 @@ const UploadStudentsPage: React.FC = () => {
     return (
         <div className={style.container}>
             <AddClass addClass={addClass} />
-            <ClassesList selectedClass={selectedClass} setSelectedClassId={selectClass} />
-            <StudentsList />
+            <ClassesList classes={classes} selectedClass={selectedClass} setSelectedClassId={selectClass} />
+            <StudentsList selectedClass={selectedClass} />
             <AddStudentToClass addStudent={addStudent} selectedClass={selectedClass} />
         </div>
     );
