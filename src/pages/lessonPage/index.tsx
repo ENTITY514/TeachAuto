@@ -10,7 +10,6 @@ import WorkTypeForm from './workTypes';
 const LessonPage = () => {
   const { id } = useParams<{ id: string }>();
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [editingTopic, setEditingTopic] = useState(false);
   const [newWorkType, setNewWorkType] = useState<{ type: string; max: number }>({ type: '', max: 1 });
 
   useEffect(() => {
@@ -37,7 +36,6 @@ const LessonPage = () => {
     if (!lesson) return;
     const updated = { ...lesson, topic: newTopic };
     updateLesson(updated);
-    setEditingTopic(false);
   };
 
   const handleAddWorkType = () => {
@@ -67,13 +65,10 @@ const LessonPage = () => {
   const calculateGrade = (student: StudentState) => calculatePreliminaryGrade(student, lesson);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.bigContainer}>
       <LessonHeader
         lesson={lesson}
-        editingTopic={editingTopic}
-        setEditingTopic={setEditingTopic}
-        onTopicChange={(newTopic) => setLesson({ ...lesson, topic: newTopic })}
-        onTopicBlur={() => handleTopicUpdate(lesson.topic)}
+        onTopicChange={(newTopic) => handleTopicUpdate(newTopic)}
         onHomeworkDescriptionChange={(desc) => updateLesson({ ...lesson, homeworkDescription: desc })}
       />
 

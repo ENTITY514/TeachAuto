@@ -10,33 +10,35 @@ interface StudentTableProps {
 
 const StudentTable = ({ lesson, updateLesson, calculatePreliminaryGrade }: StudentTableProps) => {
     return (
-        <table className={styles.table}>
-            <thead>
-                <tr>
-                    <th>№</th>
-                    <th>Ученик</th>
-                    <th>Присутствие</th>
-                    <th>ДЗ</th>
-                    {lesson.workTypes.map(work => (
-                        <th key={work.id}>{work.name} (макс. {work.maxScore})</th>
+        <div className={styles.container}>
+            <table className={styles.table}>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Ученик</th>
+                        <th>Присутствие</th>
+                        <th>ДЗ</th>
+                        {lesson.workTypes.map(work => (
+                            <th key={work.id}>{work.name} (макс. {work.maxScore})</th>
+                        ))}
+                        <th>Предв. оценка</th>
+                        <th>Итоговая</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {lesson.students.map((student, index) => (
+                        <StudentRow
+                            key={student.student.id}
+                            student={student}
+                            index={index}
+                            lesson={lesson}
+                            updateLesson={updateLesson}
+                            calculatePreliminaryGrade={calculatePreliminaryGrade}
+                        />
                     ))}
-                    <th>Предв. оценка</th>
-                    <th>Итоговая</th>
-                </tr>
-            </thead>
-            <tbody>
-                {lesson.students.map((student, index) => (
-                    <StudentRow
-                        key={student.student.id}
-                        student={student}
-                        index={index}
-                        lesson={lesson}
-                        updateLesson={updateLesson}
-                        calculatePreliminaryGrade={calculatePreliminaryGrade}
-                    />
-                ))}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     );
 };
 

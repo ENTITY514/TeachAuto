@@ -4,22 +4,17 @@ import React from 'react';
 
 interface LessonHeaderProps {
   lesson: Lesson;
-  editingTopic: boolean;
-  setEditingTopic: (editing: boolean) => void;
   onTopicChange: (newTopic: string) => void;
-  onTopicBlur: () => void;
   onHomeworkDescriptionChange: (description: string) => void;
 }
 
 const LessonHeader = ({
   lesson,
-  editingTopic,
-  setEditingTopic,
   onTopicChange,
-  onTopicBlur,
   onHomeworkDescriptionChange
 }: LessonHeaderProps) => {
   const [className, setClassName] = React.useState<string>("class")
+  const [originalTopic] = React.useState(lesson.topic);
 
   React.useEffect(() => {
     const storedClasses = localStorage.getItem('classes');
@@ -30,28 +25,27 @@ const LessonHeader = ({
     }
   }, []);
   return (
-    <div className={styles.header}>
-      <div className={styles.classInfo}>
-        <h2>Класс {className}</h2>
-        <p>Дата: {new Date(lesson.date).toLocaleDateString()}</p>
-        {editingTopic ? (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <div className={styles.classInfo}>
+          <h2>Класс {className}</h2>
+          <p>Дата: {new Date(lesson.date).toLocaleDateString()}</p>
           <input
             type="text"
             value={lesson.topic}
             onChange={(e) => onTopicChange(e.target.value)}
-            onBlur={onTopicBlur}
             autoFocus
+            className={`${styles.editableInput} ${lesson.topic !== originalTopic ? styles.changed : ''}`}
           />
-        ) : (
-          <h3 onDoubleClick={() => setEditingTopic(true)}>{lesson.topic}</h3>
-        )}
-      </div>
-      <div className={styles.homework}>
-        <h4>Домашнее задание:</h4>
-        <textarea
-          value={lesson.homeworkDescription}
-          onChange={(e) => onHomeworkDescriptionChange(e.target.value)}
-        />
+        </div>
+        <div className={styles.homework}>
+          <h4>Домашнее задание:</h4>
+          <textarea
+            value={lesson.homeworkDescription}
+            onChange={(e) => onHomeworkDescriptionChange(e.target.value)}
+            className={`${styles.editableInput} ${lesson.topic !== originalTopic ? styles.changed : ''}`}
+          />
+        </div>
       </div>
     </div>
   );
