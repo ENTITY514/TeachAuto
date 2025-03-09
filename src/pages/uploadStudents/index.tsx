@@ -52,7 +52,7 @@ const UploadStudentsPage: React.FC = () => {
     const selectedClass = classes.find((c) => c.id === selectedClassId);
 
     return (
-        <div className={style.container}>
+        <div className={style.content}>
             <AddClass addClass={addClass} />
             <ClassesList classes={classes} selectedClass={selectedClass} setSelectedClassId={selectClass} />
             <StudentsList selectedClass={selectedClass} />

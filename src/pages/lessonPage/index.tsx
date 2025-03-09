@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styles from './style.module.css';
 import { Lesson, WorkType, StudentState } from 'interfaces/main.interface';
+import LessonHeader from './header';
+import StudentTable from './table';
+import { calculatePreliminaryGrade, SortStudentOfLessonByPresence } from './utils';
+import WorkTypeForm from './workTypes';
 
 const LessonPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,7 +54,7 @@ const LessonPage = () => {
       workTypes: [...lesson.workTypes, newWork],
       students: lesson.students.map(student => ({
         ...student,
-        works: { ...student.works, [newWork.id]: 0 }
+        works: { ...student.works, [newWork.id]: newWork.maxScore }
       }))
     };
 
@@ -58,156 +62,32 @@ const LessonPage = () => {
     updateLesson(updated);
   };
 
-  const calculatePreliminaryGrade = (student: StudentState) => {
-    const homeworkScore = student.homework;
-    const workScores = Object.values(student.works).reduce((a, b) => a + b, 0);
-    const totalScore = homeworkScore + workScores;
-    const maxPossible = 2 + lesson!.workTypes.reduce((a, b) => a + b.maxScore, 0);
-    return Math.round((totalScore / maxPossible) * 10);
-  };
-
   if (!lesson) return <div>Loading...</div>;
+
+  const calculateGrade = (student: StudentState) => calculatePreliminaryGrade(student, lesson);
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.classInfo}>
-          <h2>Класс {lesson.classId}</h2>
-          <p>Дата: {new Date(lesson.date).toLocaleDateString()}</p>
-          {editingTopic ? (
-            <input
-              type="text"
-              value={lesson.topic}
-              onChange={(e) => setLesson({ ...lesson, topic: e.target.value })}
-              onBlur={() => handleTopicUpdate(lesson.topic)}
-              autoFocus
-            />
-          ) : (
-            <h3 onDoubleClick={() => setEditingTopic(true)}>{lesson.topic}</h3>
-          )}
-        </div>
-        <div className={styles.homework}>
-          <h4>Домашнее задание:</h4>
-          <textarea
-            value={lesson.homeworkDescription}
-            onChange={(e) => updateLesson({ ...lesson, homeworkDescription: e.target.value })}
-          />
-        </div>
-      </div>
+      <LessonHeader
+        lesson={lesson}
+        editingTopic={editingTopic}
+        setEditingTopic={setEditingTopic}
+        onTopicChange={(newTopic) => setLesson({ ...lesson, topic: newTopic })}
+        onTopicBlur={() => handleTopicUpdate(lesson.topic)}
+        onHomeworkDescriptionChange={(desc) => updateLesson({ ...lesson, homeworkDescription: desc })}
+      />
 
-      <div className={styles.workTypes}>
-        <select
-          value={newWorkType.type}
-          onChange={(e) => setNewWorkType({ ...newWorkType, type: e.target.value })}
-        >
-          <option value="">Выберите тип работы</option>
-          <option value="Устный ответ">Устный ответ</option>
-          <option value="Самостоятельная работа">Самостоятельная работа</option>
-          <option value="Ответ у доски">Ответ у доски</option>
-        </select>
-        <input
-          type="number"
-          min="1"
-          value={newWorkType.max}
-          onChange={(e) => setNewWorkType({ ...newWorkType, max: +e.target.value })}
-        />
-        <button onClick={handleAddWorkType}>Добавить работу</button>
-      </div>
+      <WorkTypeForm
+        newWorkType={newWorkType}
+        setNewWorkType={setNewWorkType}
+        onAddWorkType={handleAddWorkType}
+      />
 
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>№</th>
-            <th>Ученик</th>
-            <th>Присутствие</th>
-            <th>ДЗ</th>
-            {lesson.workTypes.map(work => (
-              <th key={work.id}>{work.name} (макс. {work.maxScore})</th>
-            ))}
-            <th>Предв. оценка</th>
-            <th>Итоговая</th>
-          </tr>
-        </thead>
-        <tbody>
-          {lesson.students.map((student, index) => (
-            <tr key={student.student.id}>
-              <td>{index + 1}</td>
-              <td>{`${student.student.firstName + " " + student.student.lastName}`}</td>
-              <td
-                className={`${styles.presence} ${student.present ? styles.present : styles.absent}`}
-                onClick={() => {
-                  const updated = {
-                    ...lesson,
-                    students: lesson.students.map(s =>
-                      s.student.id === student.student.id ? { ...s, present: !s.present } : s
-                    )
-                  };
-                  updateLesson(updated);
-                }}
-              >
-                {student.present ? '✓' : '✕'}
-              </td>
-              <td
-                className={`${styles.hwCell} ${styles[`hw${student.homework}`]}`}
-                onClick={() => {
-                  const newHomework = (student.homework + 1) % 3 as 0 | 1 | 2;
-                  const updated = {
-                    ...lesson,
-                    students: lesson.students.map(s =>
-                      s.student.id === student.student.id ? { ...s, homework: newHomework } : s
-                    )
-                  };
-                  updateLesson(updated);
-                }}
-              />
-              {lesson.workTypes.map(work => (
-                <td key={work.id}>
-                  <input
-                    type="number"
-                    min="0"
-                    max={work.maxScore}
-                    value={student.works[work.id]}
-                    onChange={(e) => {
-                      const updatedWorks = {
-                        ...student.works,
-                        [work.id]: Math.min(work.maxScore, Math.max(0, +e.target.value))
-                      };
-                      const updated = {
-                        ...lesson,
-                        students: lesson.students.map(s =>
-                          s.student.id === student.student.id ? { ...s, works: updatedWorks } : s
-                        )
-                      };
-                      updateLesson(updated);
-                    }}
-                  />
-                </td>
-              ))}
-              <td>{calculatePreliminaryGrade(student)}</td>
-              <td>
-                <input
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={student.finalGrade || ''}
-                  onChange={(e) => {
-                    const updated = {
-                      ...lesson,
-                      students: lesson.students.map(s =>
-                        s.student.id === student.student.id ? {
-                          ...s,
-                          finalGrade: Math.min(10, Math.max(1, +e.target.value))
-                        } : s
-                      )
-                    };
-                    updateLesson(updated);
-                  }}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <StudentTable
+        lesson={lesson}
+        updateLesson={updateLesson}
+        calculatePreliminaryGrade={calculateGrade}
+      />
 
       <button
         className={styles.saveButton}

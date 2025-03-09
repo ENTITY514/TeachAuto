@@ -35,3 +35,5 @@ export interface Lesson {
     students: StudentState[];
     workTypes: WorkType[];
 }
+
+export type SortType = 'default' | 'presence' | 'alphabet';

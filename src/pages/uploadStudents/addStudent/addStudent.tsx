@@ -39,15 +39,15 @@ export const AddStudentToClass: React.FC<IAddStuedntToClass> = ({ addStudent, se
                     <h3>Добавить ученика в класс {selectedClass.grade} {selectedClass.rank}</h3>
                     <input
                         type="text"
-                        placeholder="Имя"
-                        value={newStudentFirstName}
-                        onChange={(e) => setNewStudentFirstName(e.target.value)}
-                    />
-                    <input
-                        type="text"
                         placeholder="Фамилия"
                         value={newStudentLastName}
                         onChange={(e) => setNewStudentLastName(e.target.value)}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Имя"
+                        value={newStudentFirstName}
+                        onChange={(e) => setNewStudentFirstName(e.target.value)}
                     />
                     <select
                         value={newStudentBaseGrade}
@@ -59,8 +59,8 @@ export const AddStudentToClass: React.FC<IAddStuedntToClass> = ({ addStudent, se
                             </option>
                         ))}
                     </select>
-                    <button onClick={handleClick}>Добавить ученика</button>
-                    <button onClick={clearStudentForm}>Очистить поле</button>
+                    <button onClick={handleClick} style={{ marginLeft: "10px" }}>Добавить ученика</button>
+                    <button onClick={clearStudentForm} style={{ marginLeft: "10px" }}>Очистить поле</button>
                 </div>
             )}
         </div>
