@@ -6,6 +6,7 @@ import LessonHeader from './header';
 import StudentTable from './table';
 import { calculatePreliminaryGrade, SortStudentOfLessonByPresence } from './utils';
 import WorkTypeForm from './workTypes';
+import StudentRandomizer from './randomizer';
 
 const LessonPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -83,6 +84,8 @@ const LessonPage = () => {
         updateLesson={updateLesson}
         calculatePreliminaryGrade={calculateGrade}
       />
+
+      <StudentRandomizer students={lesson.students} />
 
       <button
         className={styles.saveButton}

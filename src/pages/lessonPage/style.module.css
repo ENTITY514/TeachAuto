@@ -225,3 +225,57 @@ input[type="number"] {
 .editableInput.changed {
   animation: inputHighlight 0.5s ease;
 }
+
+.randomizerContainer {
+  /* Дополнительные стили для контейнера рандомайзера, если нужно */
+  margin-top: 2rem; /* Отступ сверху */
+  background-color: #e9ecef; /* Немного другой фон для выделения */
+}
+
+.randomizerContainer h4 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.randomizerButton {
+  background-color: #007bff; /* Синий цвет для кнопки */
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease-in-out;
+  margin-right: 1rem; /* Отступ справа, если нужно */
+}
+
+.randomizerButton:hover {
+  background-color: #0056b3; /* Затемнение при наведении */
+}
+
+.randomizerButton:disabled {
+  background-color: #cccccc; /* Серый цвет для неактивной кнопки */
+  cursor: not-allowed;
+}
+
+.randomizerResult,
+.randomizerMessage,
+.randomizerStatus {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.randomizerResult strong {
+    color: #d9534f; /* Выделим результат цветом */
+}
+
+.randomizerMessage {
+    font-style: italic;
+    color: #555;
+}
+
+.randomizerStatus {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
